@@ -1,10 +1,10 @@
 {
   "name": "poem-manifests",
   "version": "1.0.0",
-  "description": "Load in manifests to create different level configurations.",
+  "description": "Re-use visualization code by creating levels from manifests",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -16,6 +16,8 @@
     "art",
     "poems",
     "level management",
+    "level loader",
+    "loader",
     "manifests"
   ],
   "author": "Greg Tatum",

@@ -1,6 +1,6 @@
 # poem-manifests
 
-Create a manifest that will load in all of your visualization's components. This makes it really easy to have multiple levels or scenes and share code between them. It decouples your individual components from the logic of how your visualization loads in and works, greatly increasing the reusability of your implementation code.
+Loads in a manifest that will set all of your visualization's components to a single graph object. This makes it really easy to have multiple levels or scenes and share code between them. It decouples your individual components from the logic of how your visualization loads in and works, greatly increasing the reusability of your implementation code.
 
 ## Usage
 
@@ -37,16 +37,16 @@ The base manifests object should be composed of key pair values where the key is
 
 	module.exports = {
 		level1 : require('./level1'),
-		level2 : require('./level1'),
-		level3 : require('./level1'),
-		level4 : require('./level1'),
+		level2 : require('./level2'),
+		level3 : require('./level3'),
+		level4 : require('./level4')
 	};
 
 #### `level1.js`
 
 	module.exports = {
 		
-		// Custom properties that don't automatically get set to the graph
+		// Custom properties that do not automatically get set to the graph
 		title : "Level 1 - My Amazing Visualization",
 		menuOrder : 0,
 		customConfig : {
@@ -66,7 +66,6 @@ The base manifests object should be composed of key pair values where the key is
 			
 			// Pseudo-code: graph.controls = new construct( graph, properties );
 			controls : {
-				
 				construct: require("../js/components/cameras/Controls"),
 				properties: {
 					minDistance : 500,
@@ -87,7 +86,18 @@ The base manifests object should be composed of key pair values where the key is
 		}
 	};
 
+The loader's "load" event passes the callback the graph object (poem) that behaves something like this from the above example:
+
+	
+	poem.background.doSomething();
+	poem.controls.doSomething();
+	poem.info.doSomething();
+	console.log( poem.winMessage );
+	
+
 #### An example component
+
+Each component gets passed the graph object and the properties. The component is called at the moment it is loaded.
 
 	function Background( graph, properties ) {
 		
