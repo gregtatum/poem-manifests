@@ -1,6 +1,6 @@
 {
   "name": "poem-manifests",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Re-use visualization code by creating levels from manifests",
   "main": "lib/index.js",
   "scripts": {
