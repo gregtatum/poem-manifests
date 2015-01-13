@@ -2,12 +2,35 @@
 
 Loads in a manifest that will set all of your visualization's components to a single graph object. This makes it really easy to have multiple levels or scenes and share code between them. It decouples your individual components from the logic of how your visualization loads in and works, greatly increasing the reusability of your implementation code.
 
+## This module's concepts
+
+#### manifest
+
+An object that contains properties for your visualization, and references to the components.
+
+#### graph
+
+A central scene object that collects all of your components. It gets passed into every component.
+
+#### component
+
+A reusable bit of code like a camera, player, bad guy, background, etc. It gets passed a graph object and properties.
+
+####  properties
+
+General configuration for components. This should be stuff like the position a camera starts, how fast a bad guy moves. What image to use as a texture for a background.
+
+## Example
+
+See the `./example` folder for an example setup.
+
 ## Usage
 
 	var Poem = require('./poem'); //Your graph (or central object) for your visualization
 	var manifests = require('./manifests'); //Your manifests object, example below
 	
 	var loader = require('poem-manifests')( manifests, {
+		//Configuration
 		getGraph : function() {
 			return new Poem();
 		}
@@ -17,6 +40,9 @@ Loads in a manifest that will set all of your visualization's components to a si
 		var poem = e.graph;
 		document.title = e.manifest.title;
 		poem.start();
+		
+		//All loaded components can be accessed by the graph object
+		poem.camera.followPlayer( poem.player );
 	});
 	
 	loader.load( "intro" );
@@ -31,7 +57,7 @@ The typical folder structure would be something like this:
 		./level2.js
 		./level3.js
 
-#### `index.js`
+#### `./manifests/index.js`
 
 The base manifests object should be composed of key pair values where the key is the slug of your level/scene/view that you want to load in.
 
@@ -42,19 +68,22 @@ The base manifests object should be composed of key pair values where the key is
 		level4 : require('./level4')
 	};
 
-#### `level1.js`
+#### `./manifests/level1.js`
 
 	module.exports = {
 		
-		// Custom properties that do not automatically get set to the graph
+		// These properties do not automatically get set onto the graph object.
+		// They only stay on the manifest object which gets passed to the "load" event.
+		
 		title : "Level 1 - My Amazing Visualization",
 		menuOrder : 0,
 		customConfig : {
 			option1 : "value"
 		},
 		
-		// Properties automatically loaded onto the graph
-		objects : {
+		// Components are loaded onto the graph object
+		
+		components : {
 			
 			// Pseudo-code: graph.background = suppliedFunction( graph, properties );
 			background : {
@@ -86,16 +115,37 @@ The base manifests object should be composed of key pair values where the key is
 		}
 	};
 
-The loader's "load" event passes the callback the graph object (poem) that behaves something like this from the above example:
+The loader's "load" event passes the handler the graph object (poem). This object behaves something like this given the above example:
 
-	
 	poem.background.doSomething();
 	poem.controls.doSomething();
 	poem.info.doSomething();
 	console.log( poem.winMessage );
-	
 
-#### An example component
+## Configuration
+
+	var loader = require('poem-manifests')( manifests, {
+		getGraph : function() {	return new Poem(); },
+		emitter : nodeEmitter,
+		globalManifest : require('./globalManifest')
+	});
+
+
+#### `getGraph`
+
+A function to generate the central graph object of your level. If not provided a new blank object is used for your graph. The graph object is shared by all of your components. It typically should always create a new object.
+
+#### `emitter`
+
+A node.js EventEmitter. If one is set, it is used by the loop. Otherwise a new EventEmitter is created. This is useful to create a central emitter that collects common events.
+
+#### `globalManifest`
+
+A manifest that gets loaded for every level. Any properties on an individual level will overshadow ones on the global manifest. It's useful to declaratively configure your visualization. In pseudo-code the graph and manifests are processed like this:
+
+	_.extend( graph, globalManifest, currentManifest );
+
+## An example component
 
 Each component gets passed the graph object and the properties. The component is called at the moment it is loaded.
 
@@ -114,4 +164,4 @@ Each component gets passed the graph object and the properties. The component is
 		
 	}
 	
-	Background.prototype { ... }
+	Background.prototype = { ... };

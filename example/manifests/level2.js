@@ -2,7 +2,7 @@ module.exports = {
 	
 	title: "Level 2 - Adventures in the Known",
 	
-	objects : {
+	components : {
 		
 		camera : {
 			function : require('../components/camera'),

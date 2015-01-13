@@ -2,6 +2,7 @@ var manifests = require('../example/manifests');
 var configureLoader = require('../lib');
 var EventEmitter = require('events').EventEmitter;
 var _ = require('lodash');
+var globalManifest = require('../example/manifests/global');
 
 describe('poem-manifests', function() {
 	
@@ -12,9 +13,8 @@ describe('poem-manifests', function() {
 		};
 		
 		this.loader = configureLoader( manifests, {
-			getGraph : function() {
-				return graph;
-			}
+			getGraph : function() {	return graph; },
+			globalManifest : globalManifest
 		});
 		
 		this.graph = graph;
@@ -71,29 +71,35 @@ describe('poem-manifests', function() {
 				this.loadedSlug = e.slug;
 				this.loadedManifest = e.manifest;
 				this.loadedGraph = e.graph;
+				this.loadedGlobalManifest = e.globalManifest;
 				
 				done();
 				
 			}.bind(this));
 			
 			this.loader.load( 'level1' );
-		});
-		
-		it("provides the manifest", function() {
-			
-			expect( this.loadedManifest ).toBe( manifests.level1 );
 			
 		});
 		
-		it("provides the slug", function() {
+		describe("event properties", function() {
+
+			it("provides the manifest", function() {
 			
-			expect( this.loadedSlug ).toBe( "level1" );
+				expect( this.loadedManifest ).toBe( manifests.level1 );
 			
-		});
+			});
 		
-		it("provides the graph", function() {
+			it("provides the slug", function() {
 			
-			expect( this.loadedGraph ).toBe( this.graph );
+				expect( this.loadedSlug ).toBe( "level1" );
+			
+			});
+		
+			it("provides the graph", function() {
+			
+				expect( this.loadedGraph ).toBe( this.graph );
+			
+			});
 			
 		});
 		
@@ -126,6 +132,20 @@ describe('poem-manifests', function() {
 			});
 			
 		});
+		
+		describe("global manifest initiation", function() {
+			
+			it("loads the global manifest", function() {
+				expect( _.isObject( this.loadedGraph.mouse ) ).toEqual( true );
+			});
+			
+			it("is overshadowed by level manifests", function() {
+				expect( this.loadedGraph.overshadow.position[0] ).toEqual( 0 );
+				expect( this.loadedGraph.overshadow.position[2] ).toEqual( -50 );
+			});
+			
+		});
+		
 	});	
 	
 	describe("unload event", function() {
