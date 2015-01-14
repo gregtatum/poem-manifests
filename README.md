@@ -31,7 +31,7 @@ See the `./example` folder for an example setup.
 	
 	var loader = require('poem-manifests')( manifests, {
 		//Configuration
-		getGraph : function() {
+		getGraph : function( manifest, slug ) {
 			return new Poem();
 		}
 	});
@@ -125,15 +125,15 @@ The loader's "load" event passes the handler the graph object (poem). This objec
 ## Configuration
 
 	var loader = require('poem-manifests')( manifests, {
-		getGraph : function() {	return new Poem(); },
+		getGraph : function( manifest, slug ) {	return new Poem(); },
 		emitter : nodeEmitter,
 		globalManifest : require('./globalManifest')
 	});
 
 
-#### `getGraph`
+#### `getGraph( manifest, slug )`
 
-A function to generate the central graph object of your level. If not provided a new blank object is used for your graph. The graph object is shared by all of your components. It typically should always create a new object.
+A function to generate the central graph object of your level. If not provided, a new blank object is used for your graph. The graph object is shared by all of your components. It typically should always create a new object.
 
 #### `emitter`
 
