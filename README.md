@@ -2,6 +2,8 @@
 
 Loads in a manifest that will set all of your visualization's components to a single graph object. This makes it really easy to have multiple levels or scenes and share code between them. It decouples your individual components from the logic of how your visualization loads in and works, greatly increasing the reusability of your implementation code.
 
+Part of the [programming-poem](https://www.npmjs.com/browse/keyword/programming-poem) module series.
+
 ## This module's concepts
 
 #### manifest
