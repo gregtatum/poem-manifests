@@ -28,9 +28,12 @@
   "homepage": "https://github.com/tatumcreative/poem-manifests",
   "dependencies": {
     "events": "^1.0.2",
-    "lodash": "^2.4.1"
+    "lodash.assign": "^3.1.0",
+    "lodash.foreach": "^3.0.3",
+    "lodash.isobject": "^3.0.1"
   },
   "devDependencies": {
-    "jasmine": "^2.1.1"
+    "jasmine": "^2.1.1",
+    "lodash": "^2.4.1"
   }
 }
