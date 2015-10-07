@@ -54,9 +54,9 @@ describe('poem-manifests', function() {
 			expect( _.isFunction( this.loader.load ) ).toEqual( true );
 		});
 		
-		it('the load method returns true or false if a level is found or not', function() {
+		it('the load method returns the scene graph if a level is found, false if not', function() {
 			
-			expect( this.loader.load('level1') ).toEqual( true );
+			expect( this.loader.load('level1') ).toEqual( this.graph );
 			expect( this.loader.load('fakeLevel') ).toEqual( false );
 			
 		});
